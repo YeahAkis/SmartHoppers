@@ -74,7 +74,7 @@ public class HopperListener implements Listener {
                     if (event.getClick() == ClickType.RIGHT) {
                         filterItem.setExactMatch(!filterItem.isExactMatch());
                     } else {
-                        hopperData.removeFilterItem(filterItem.getItem());
+                        hopperData.removeFilterItem(filterItem);
                     }
                 }
             }

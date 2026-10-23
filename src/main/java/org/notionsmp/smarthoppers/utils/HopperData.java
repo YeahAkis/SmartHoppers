@@ -16,20 +16,20 @@ public class HopperData implements ConfigurationSerializable {
     public void addFilterItem(ItemStack item, boolean exactMatch) {
         ItemStack clonedItem = item.clone();
         for (FilterItem fi : filterItems) {
-            if (exactMatch && fi.isExactMatch() && fi.getItem().equals(clonedItem)) return;
+            if (exactMatch && fi.isExactMatch() && fi.getItem().isSimilar(clonedItem)) return;
             if (!exactMatch && !fi.isExactMatch() && fi.getItem().getType() == clonedItem.getType()) return;
         }
         filterItems.add(new FilterItem(clonedItem, exactMatch));
     }
 
-    public void removeFilterItem(ItemStack item) {
-        filterItems.removeIf(fi -> fi.getItem().equals(item));
+    public void removeFilterItem(FilterItem filterItem) {
+        filterItems.remove(filterItem);
     }
 
     public boolean isItemAllowed(ItemStack item) {
         for (FilterItem fi : filterItems) {
             boolean match = fi.isExactMatch()
-                    ? fi.getItem().equals(item)
+                    ? fi.getItem().isSimilar(item)
                     : fi.getItem().getType() == item.getType();
             if (match) return whitelist;
         }
