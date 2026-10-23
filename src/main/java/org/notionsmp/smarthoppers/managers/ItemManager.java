@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -82,10 +83,12 @@ public class ItemManager {
     public static boolean isHopperItem(ItemStack item) {
         if (item == null) return false;
 
-        String nexoId = NexoItems.idFromItem(item);
-        if (nexoId != null) {
-            ItemManager instance = SmartHoppers.getInstance().getItemManager();
-            return nexoId.equals(instance.nexoItemId);
+        if (Bukkit.getPluginManager().isPluginEnabled("Nexo")) {
+            String nexoId = NexoItems.idFromItem(item);
+            if (nexoId != null) {
+                ItemManager instance = SmartHoppers.getInstance().getItemManager();
+                return nexoId.equals(instance.nexoItemId);
+            }
         }
 
         return item.hasItemMeta() &&
