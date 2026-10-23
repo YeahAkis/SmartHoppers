@@ -50,12 +50,12 @@ The menu respects land protection through [ProtectionLib](https://github.com/Nex
 ## Building
 
 ```
-gradle build
+./gradlew build
 ```
 
 The jar ends up in `build/libs`. It needs JDK 21 or newer.
 
-Publishing to Modrinth is `gradle modrinth`. It reads the token from the `modrinthToken` Gradle property (or `MODRINTH_TOKEN`) and uploads the shaded jar with the newest section of `CHANGELOG.md` as the changelog. Add `-PmodrinthDryRun` to see what would be sent without uploading.
+Publishing to Modrinth is `./gradlew modrinth`. It reads the token from the `modrinthToken` Gradle property (or `MODRINTH_TOKEN`) and uploads the shaded jar with the newest section of `CHANGELOG.md` as the changelog. Add `-PmodrinthDryRun` to see what would be sent without uploading.
 
 ## Metrics
 
