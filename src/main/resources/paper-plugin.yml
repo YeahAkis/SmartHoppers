@@ -2,5 +2,45 @@ name: SmartHoppers
 version: ${version}
 main: org.notionsmp.smarthoppers.SmartHoppers
 api-version: '1.21'
-load: STARTUP
+load: POSTWORLD
 author: "Akis (discord: yeahakis)"
+contributors: ["Naimad (discord: 4g0)"]
+loader: org.notionsmp.smarthoppers.SHLoader
+folia-supported: true
+permissions:
+  smarthoppers.use:
+    description: "The permission required to use the Hopper Item on Hoppers"
+    default: true
+dependencies:
+  server:
+    Nexo:
+      load: BEFORE
+      required: false
+    CrashClaim:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    HuskTowns:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    WorldGuard:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Towny:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Factions:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Lands:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    PlotSquared:
+      load: BEFORE
+      required: false
+      join-classpath: true

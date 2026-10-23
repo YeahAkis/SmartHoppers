@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id('xyz.jpenilla.run-paper') version '2.3.1'
     id 'com.palantir.git-version' version '3.0.0'
+    id 'com.modrinth.minotaur' version '2.8.7'
 }
 
 group = project.group
@@ -18,11 +19,35 @@ repositories {
     mavenCentral()
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'https://repo.nexomc.com/releases' }
+    maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url 'https://repo.tcoded.com/releases' }
 }
 
 dependencies {
-    compileOnly('io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT')
+    compileOnly("io.papermc.paper:paper-api:${paperapi}")
+    compileOnly("com.nexomc:nexo:${nexo}")
+    implementation("com.nexomc:protectionlib:${protectionlib}")
+    compileOnly("org.projectlombok:lombok:${lombok}")
+    annotationProcessor("org.projectlombok:lombok:${lombok}")
+    implementation("co.aikar:acf-paper:${paperacf}")
+    implementation("com.tcoded:FoliaLib:${folialib}")
 }
+
+shadowJar {
+    relocate 'co.aikar.commands', 'org.notionsmp.smarthoppers.acf'
+    relocate 'co.aikar.locales', 'org.notionsmp.smarthoppers.locales'
+    relocate 'com.nexomc.protectionlib', 'org.notionsmp.smarthoppers.protectionlib'
+    relocate 'com.tcoded.folialib', 'org.notionsmp.smarthoppers.folialib'
+
+    exclude 'META-INF/**', "kotlin/**"
+
+    archiveClassifier.set('')
+}
+
+jar.enabled = false
+
+tasks.build.dependsOn tasks.shadowJar
 
 tasks {
     runServer {
@@ -52,7 +77,27 @@ processResources {
     def props = [version: version]
     inputs.properties props
     filteringCharset 'UTF-8'
-    filesMatching(['paper-plugin.yml', 'plugin.yml']) {
+    filesMatching(['paper-plugin.yml']) {
         expand props
     }
+}
+
+def supportedGameVersions = [
+        '1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4', '1.21.5', '1.21.6', '1.21.7', '1.21.8',
+        '1.21.9', '1.21.10', '1.21.11', '26.1', '26.1.1', '26.1.2', '26.2', '26.3'
+]
+
+modrinth {
+    token = providers.gradleProperty('modrinthToken').orElse(providers.environmentVariable('MODRINTH_TOKEN'))
+    projectId = 'axmYckD5'
+    versionNumber = project.version.toString()
+    versionName = "SmartHoppers ${project.version}"
+    versionType = 'release'
+    uploadFile = tasks.shadowJar
+    gameVersions = supportedGameVersions
+    loaders = ['paper', 'purpur', 'folia']
+    changelog = providers.provider {
+        file('CHANGELOG.md').text.split('\n## ')[1].split('\n', 2)[1].trim()
+    }
+    debugMode = providers.gradleProperty('modrinthDryRun').isPresent()
 }
